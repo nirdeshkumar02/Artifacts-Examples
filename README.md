@@ -21,6 +21,8 @@ The dependencies for gradle project is store in `build.gradle` file
 For Maven
 ---------------
 
+Directory - java-maven-app
+
 You need to download and install the maven for build java project.
 You need to create POM.xml which has all dependencies to run this maven project,
 So for building the project you need to run `mvn install` which will download all the
@@ -34,6 +36,8 @@ Note - In both projects (Gradle or Maven) You will get a jar file and if you wan
 Build Node Project
 =====================
 
+Directory - react-nodejs-example
+
 NPM and Yarn are package manager not build tools as Gradle and Maven are.
 `Package.json` works like as dependency holder where project dependency are stored as `pom.xml` or `build.gradle`.
 Run `npm pack` to create a tgz file
@@ -46,3 +50,46 @@ Common Pattern in all these tools
 2. Repo for dependency
 3. Command line tool
 4. Package Manager
+
+To Upload Gradle Artifects to nexus
+======================================
+
+Create a file gradle.properties in gradle directory and add this data 
+
+```
+repoUser = nirdesh
+repoPassword = Nirdesh@123
+```
+Add this code to your build.gradle file
+
+```
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact("build/libs/java-app-$version"+".jar") {
+                extension 'jar'
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name 'nexus'
+            url "http://13.232.237.54:8081/repository/maven-snapshots/"
+            allowInsecureProtocol true
+            credentials {
+                username project.repoUser
+                password project.repoPassword
+            }
+        }
+    }
+}
+
+```
+
+Build the project - `./gradlew build`
+Publish to Nexus - `./gradlew publish`
+
+You will get the artifect in the above mention url.
