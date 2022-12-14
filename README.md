@@ -51,12 +51,16 @@ Common Pattern in all these tools
 3. Command line tool
 4. Package Manager
 
-To Upload Gradle Artifects to nexus
+To Upload Gradle Artifects to Nexus
 ======================================
+
+# Change the variable value according to yours
 
 Create a file gradle.properties in gradle directory and add this data 
 
 ```
+# Nexus User Credential
+
 repoUser = nirdesh
 repoPassword = Nirdesh@123
 ```
@@ -77,10 +81,10 @@ publishing {
     repositories {
         maven {
             name 'nexus'
-            url "http://13.232.237.54:8081/repository/maven-snapshots/"
+            url "http://13.232.237.54:8081/repository/maven-snapshots/"  # Nexus Repository Url
             allowInsecureProtocol true
             credentials {
-                username project.repoUser
+                username project.repoUser  # Refrencing the Nexus User Credential
                 password project.repoPassword
             }
         }
@@ -93,3 +97,62 @@ Build the project - `./gradlew build`
 Publish to Nexus - `./gradlew publish`
 
 You will get the artifect in the above mention url.
+
+To Upload Maven Artifects to Nexus
+======================================
+
+Create a file inside your window directory c/user/nksaini/.m2 => settings.xml and add this there
+
+```
+<settings>
+    <servers>
+        <server>
+            <id>nexus-snapshots</id>   # Nexus Profile Name
+            <username>nirdesh</username>  # Nexus User Credentials
+            <password>Nirdesh@123</password>
+        </server>
+    </servers>
+</settings>
+```
+
+Add this to your pom.xml file under build
+
+```
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+```
+
+Add this to your pom.xml under project
+
+```
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id> # Nexus Creds Profile Refrence
+            <url>http://13.232.237.54:8081/repository/maven-snapshots/</url> # Nexus Repo Url
+        </snapshotRepository>
+    </distributionManagement>
+
+```
+
+Build the jar - `mvn package`
+Publish to Nexus - `mvn deploy`
+
+You will get the artifect in the above mention url.
+Or go to nexus dashboard, browse on header, Browse, maven-snapshots, you will find your artifect 
