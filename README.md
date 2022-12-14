@@ -54,13 +54,12 @@ Common Pattern in all these tools
 To Upload Gradle Artifects to Nexus
 ======================================
 
- <!-- Change the variable value according to yours -->
+ Change all the values to your values like Nexus User Creds, Nexus Repo Url
 
 Create a file gradle.properties in gradle directory and add this data 
 
+Nexus User Credential
 ```
-<!-- Nexus User Credential -->
-
 repoUser = nirdesh
 repoPassword = Nirdesh@123
 ```
